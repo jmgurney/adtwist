@@ -33,15 +33,15 @@ __license__ = '2-clause BSD license'
 
 from alarmdecoder.event import event
 
-from twisted.internet import reactor  
+from twisted.internet import reactor
 from twisted.internet.defer import inlineCallbacks, Deferred, returnValue
 from twisted.protocols import basic
 from twisted.test import proto_helpers
-from twisted.trial import unittest 
+from twisted.trial import unittest
 
 import alarmdecoder
 import mock
-import twisted.internet.serialport 
+import twisted.internet.serialport
 
 __all__ = [ 'AlarmDecoderProtocol', 'adtwist' ]
 
