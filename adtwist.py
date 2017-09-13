@@ -66,6 +66,14 @@ class AlarmDecoderProtocol(basic.LineReceiver):
 			self.dropLine = False
 			return
 
+		# On real hardware, a prompt (possibly from the C and V
+		# commands) will be inserted in the middle of a message
+		# (and apparently flush the remaining line), so detect
+		# when we get a prompt, and there was more data, and
+		# ignore the line
+		if line[-3:] == '\n!>' and len(line) > 3:
+			return
+
 		self.on_read(data=line)
 
 	# AD Device Stuff
@@ -131,6 +139,12 @@ class TestADProtocol(unittest.TestCase):
 		self.adp.dataReceived('VZ;RF;ZX;RE;AU;3X;CG;DD;MF;LR;KE;MK;CB\r\n')
 		self.adp.dataReceived('!CONFIG>ADDRESS=18&CONFIGBITS=ff00&LRR=N&EXP=NNNNN&REL=NNNN&MASK=ffffffff&DEDUPLICATE=N\r\n')
 		self.adp.dataReceived('!VER:ffffffff,V2.2a.6,TX;RX;SM;VZ;RF;ZX;RE;AU;3X;CG;DD;MF;LR;KE;MK;CB\r\n')
+
+	def test_middleprompt(self):
+		'''Test that we don't create an error when a prompt appears
+		in the middle of the line which can happen at start up.'''
+
+		self.adp.dataReceived('[0000000110000000----],0f\n!>\r\n')
 
 	@mock.patch('alarmdecoder.AlarmDecoder.open')
 	@mock.patch('twisted.internet.serialport.SerialPort')
