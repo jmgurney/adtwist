@@ -11,7 +11,7 @@ setup(name='adtwist',
       url='https://github.com/jmgurney/adtwist',
       py_modules=['adtwist'],
       install_requires=[
-          'alarmdecoder',
+          'alarmdecoder==0.12.3',
           'mock',
           'twisted',
           'pyserial',
